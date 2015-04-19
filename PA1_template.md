@@ -1,58 +1,66 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
 
 ## Loading and preprocessing the data
 
-```{r}
+
+```r
 unzip("activity.zip")
 activity <- read.csv("activity.csv")
 ```
 
 ## What is mean total number of steps taken per day?
 
-```{r}
+
+```r
 totalStepsPerDay <- by(activity$steps, activity$date, function(x) sum(x, na.rm=TRUE))
 
 hist(totalStepsPerDay)
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
+
+```r
 meanSteps <- mean(totalStepsPerDay)
 medianSteps <- median(totalStepsPerDay)
 ```
-The mean total number of steps per day was approximately `r format(meanSteps)`. 
-The median total number of steps per day was `r format(medianSteps)`.
+The mean total number of steps per day was approximately 9354.23. 
+The median total number of steps per day was 10395.
 
 ## What is the average daily activity pattern?
-```{r}
+
+```r
 meanStepsPerInterval <- by(activity$steps, activity$interval, function(x) mean(x, na.rm=TRUE))
 
 intervals <- unique(activity$interval)
 
 plot(intervals,meanStepsPerInterval,type="l")
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
+
+```r
 maxInterval <- intervals[which.max(meanStepsPerInterval)]
 ```
 
-The 5-minute interval with the highest mean number of steps starts at `r maxInterval`.
+The 5-minute interval with the highest mean number of steps starts at 835.
 
 ## Imputing missing values
 
-```{r}
+
+```r
 nMissing <- sum(is.na(activity$steps))
 ```
 
-There are `r nMissing` rows with missing values in the dataset.
+There are 2304 rows with missing values in the dataset.
 
 I implemented the following strategy for imputing the missing values:  
 1. All missing step counts at time 0 are assigned zero steps.  
 2. All subsequent missing step counts at time $i$ are assigned the same value
 as time $i-1$.  
 
-```{r}
+
+```r
 # Apply imputation method described above
 stepsImputed <- vector(mode="numeric",length=nrow(activity))
 for (i in seq_along(stepsImputed)){
@@ -73,20 +81,25 @@ activityImputed[,1] <- stepsImputed
 nMissingImputed <- sum(is.na(activityImputed$steps))
 ```
 
-After imputation, there are `r nMissingImputed` missing values.
+After imputation, there are 0 missing values.
 
-```{r}
+
+```r
 totalStepsPerDayImputed <- by(activityImputed$steps, activityImputed$date, function(x) sum(x))
 
 hist(totalStepsPerDayImputed)
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-6-1.png) 
+
+```r
 meanStepsImputed <- mean(totalStepsPerDayImputed)
 medianStepsImputed <- median(totalStepsPerDayImputed)
 ```
 
 After imputation, the mean total number of steps per day
-was approximately `r format(meanStepsImputed)`. 
-The median total number of steps per day was `r format(medianStepsImputed)`.  
+was approximately 9354.23. 
+The median total number of steps per day was 10395.  
 
 This is the same distribution as before imputation, when
 the missing values were discarded. This implies that the
@@ -96,8 +109,8 @@ zeroes and thus did not affect the daily sums.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-```{r}
 
+```r
 # Assign weekend or weekday labels
 dayLabels <- weekdays(as.Date(activity$date))
 weekdayLabels <- vector(mode="character",length=length(dayLabels))
@@ -122,10 +135,15 @@ meanStepsPerIntervalWeekends <- by(activityImputed$steps[weekdayLabels == "weeke
 
 plot(intervals,meanStepsPerIntervalWeekdays,type="l", ylim=c(0, 200))
 title("Weekdays")
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-7-1.png) 
+
+```r
 plot(intervals,meanStepsPerIntervalWeekends,type="l", ylim=c(0, 200))
 title("Weekends")
-
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-7-2.png) 
 
 Compared to the weekday distribution, the weekend distribution has less prominent morning and evening peaks.
