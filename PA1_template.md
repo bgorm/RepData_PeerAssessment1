@@ -129,9 +129,9 @@ weekdayLabels <- factor(weekdayLabels)
 # Append new column to data frame
 activityImputed <- data.frame(activityImputed, weekdayLabels)
 
-meanStepsPerIntervalWeekdays <- by(activityImputed$steps[weekdayLabels == "weekday"], activityImputed$interval[weekdayLabels == "weekday"], function(x) mean(x, na.rm=TRUE))
+meanStepsPerIntervalWeekdays <- by(activityImputed$steps[weekdayLabels == "weekday"], activityImputed$interval[weekdayLabels == "weekday"], function(x) mean(x))
 
-meanStepsPerIntervalWeekends <- by(activityImputed$steps[weekdayLabels == "weekend"], activityImputed$interval[weekdayLabels == "weekend"], function(x) mean(x, na.rm=TRUE))
+meanStepsPerIntervalWeekends <- by(activityImputed$steps[weekdayLabels == "weekend"], activityImputed$interval[weekdayLabels == "weekend"], function(x) mean(x))
 
 plot(intervals,meanStepsPerIntervalWeekdays,type="l", ylim=c(0, 200))
 title("Weekdays")
@@ -146,4 +146,4 @@ title("Weekends")
 
 ![](PA1_template_files/figure-html/unnamed-chunk-7-2.png) 
 
-Compared to the weekday distribution, the weekend distribution has less prominent morning and evening peaks.
+Compared to the weekday distribution, the weekend distribution has less prominent morning and evening peaks. Additionally, the activity on weekends starts later in the morning and ends later in the evening.
