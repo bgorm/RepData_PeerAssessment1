@@ -120,12 +120,9 @@ meanStepsPerIntervalWeekdays <- by(activityImputed$steps[weekdayLabels == "weekd
 
 meanStepsPerIntervalWeekends <- by(activityImputed$steps[weekdayLabels == "weekend"], activityImputed$interval[weekdayLabels == "weekend"], function(x) mean(x))
 
-plot(intervals,meanStepsPerIntervalWeekdays,type="l", ylim=c(0, 200))
-title("Weekdays")
-
-plot(intervals,meanStepsPerIntervalWeekends,type="l", ylim=c(0, 200))
-title("Weekends")
-
+par(mfrow=c(2,1))
+plot(intervals,meanStepsPerIntervalWeekdays,type="l", ylim=c(0, 200),main="Weekdays",ylab="Mean Steps Per Interval")
+plot(intervals,meanStepsPerIntervalWeekends,type="l", ylim=c(0, 200),main="Weekends",ylab="Mean Steps Per Interval")
 ```
 
 Compared to the weekday distribution, the weekend distribution has less prominent morning and evening peaks. Additionally, the activity on weekends starts later in the morning and ends later in the evening.
